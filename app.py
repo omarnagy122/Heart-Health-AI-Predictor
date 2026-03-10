@@ -3,10 +3,10 @@ import pandas as pd
 import joblib
 import numpy as np
 
-# إعدادات الصفحة (أيقونة وعنوان)
+# Page settings (icon and title)
 st.set_page_config(page_title="Heart Health AI", page_icon="❤️", layout="wide")
 
-# تحميل الموديل والـ Preprocessors
+#Downloading the model and the preprocessors
 @st.cache_resource
 def load_artifact():
     return joblib.load('best_heart_disease_model.joblib')
@@ -15,7 +15,7 @@ artifact = load_artifact()
 model = artifact['model']
 prep = artifact['preprocessors']
 
-# CSS عشان نخلي الشكل أحلى
+# CSS to make the design look better
 st.markdown("""
     <style>
     .main { background-color: #f5f7f9; }
@@ -27,7 +27,7 @@ st.markdown("""
 st.title("❤️ Heart Disease Prediction System")
 st.write("استخدم التقنيات الذكية لتقييم حالة القلب بناءً على بياناتك الطبية.")
 
-# تقسيم الشاشة لأعمدة
+# Split the screen into columns
 col1, col2, col3 = st.columns([1, 1, 1], gap="large")
 
 with col1:
@@ -52,7 +52,7 @@ with col3:
     ca = st.selectbox("Major Vessels (0-4)", [0, 1, 2, 3, 4])
     thal = st.selectbox("Thalassemia", ["Normal", "Fixed Defect", "Reversable Defect"])
 
-# تحويل المدخلات لـ DataFrame
+# Converting inputs to a DataFrame
 input_data = pd.DataFrame([{
     'age': age,
     'sex': sex.lower(),
@@ -102,11 +102,11 @@ if st.button("Analyze Health Status"):
     pred = model.predict(df_pca)[0]
     prob = model.predict_proba(df_pca)[0][1]
 
-    # عرض النتيجة بشكل شيك
+    # Display the result stylishly
     if pred == 1:
         st.markdown(f'<div class="prediction-box" style="background-color: #ffdce0; color: #ff4b4b;">⚠️ Risk Detected: {prob*100:.1f}% Probability</div>', unsafe_allow_html=True)
     else:
         st.markdown(f'<div class="prediction-box" style="background-color: #d4edda; color: #155724;">✅ Low Risk: {prob*100:.1f}% Probability</div>', unsafe_allow_html=True)
 
-    # عرض الماتريكس اللي طلبتها
+    
     st.info(f"Model used: {model.__class__.__name__} | Model Performance: High Precision")
